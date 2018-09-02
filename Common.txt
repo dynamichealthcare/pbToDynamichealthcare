@@ -2,3 +2,12 @@
 GetLock
     ${result}=    Evaluate    ${fileLock}==0
     Run Keyword If    '${result}'=='False'    FAIL
+
+GetVariantNames
+    [Arguments]    ${pvariantsCount}
+    ${x}=    Set Variable    ${EMPTY}
+    : FOR    ${INDEX}    IN RANGE    1    ${pvariantsCount}
+    \    ${temp}=    Get Text    //table[@id='super-product-table']/tbody[${INDEX}]/tr/td[contains(@class,'col variant')]
+    \    ${x}=    Run Keyword If    '${x}'=='${EMPTY}'    Set Variable    ${temp}
+    \    ...    ELSE    Catenate    ${x}    |    ${temp}
+    [Return]    ${x}
