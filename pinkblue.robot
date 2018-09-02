@@ -50,23 +50,28 @@ GetPB_L1
 
 GetPB_L2
     [Arguments]    ${medItems}    ${br2}
+	Log    here
     : FOR    ${INDEX}    IN RANGE    1    ${medItems}
-    \    ${url}=    Get Element Attribute    //ol/li[${INDEX}]//div[@class='product details product-item-details']//a    href
-    \    ${br3}=    Open Browser    ${url}    ${browser}
-    \    Wait Until Page Does Not Contain Element    //*[@alt='Loading...']    15s
-    \    Sleep    3s
-    \    ${pname}=    Get Text    //h1/span[@itemprop='name']
-    \    ${pprice}=    Get Text    //span[@id='price-to-pay']
-    \    ${pcontStat}    ${pcontent}    Run Keyword And Ignore Error    Get Text    //div[@class='package-detail']
-    \    ${pcontent}    Run Keyword If    '${pcontStat}'=='FAIL'    Set Variable    ${EMPTY}
-    \    ...    ELSE    Set Variable    ${pcontent}
-    \    ${pvariantsCount}=    Get Matching Xpath Count    //td[@data-th='Variant Name']
-    \    ${pvariants}=    Run Keyword If    ${pvariantsCount}>0    GetVariantNames    ${pvariantsCount}
-    \    ...    ELSE    Set Variable    ${EMPTY}
-    \    ${pimgs}=    GetImages
-    \    writeToFile    ${pname}::${pprice}::${pcontent}::${pvariants}::${pimgs}
-    \    Close Browser
-    \    Switch Browser    ${br2}
+    \    Run Keyword And Ignore Error    GetPB_L3    ${medItems}    ${br2}    ${INDEX}
+
+GetPB_L3
+    [Arguments]    ${medItems}    ${br2}    ${INDEX}
+    ${url}=    Get Element Attribute    //ol/li[${INDEX}]//div[@class='product details product-item-details']//a    href
+    ${br3}=    Open Browser    ${url}    ${browser}
+    Wait Until Page Does Not Contain Element    //*[@alt='Loading...']    15s
+    Sleep    3s
+    ${pname}=    Get Text    //h1/span[@itemprop='name']
+    ${pprice}=    Get Text    //span[@id='price-to-pay']
+    ${pcontStat}    ${pcontent}    Run Keyword And Ignore Error    Get Text    //div[@class='package-detail']
+    ${pcontent}    Run Keyword If    '${pcontStat}'=='FAIL'    Set Variable    ${EMPTY}
+    ...    ELSE    Set Variable    ${pcontent}
+    ${pvariantsCount}=    Get Matching Xpath Count    //td[@data-th='Variant Name']
+    ${pvariants}=    Run Keyword If    ${pvariantsCount}>0    GetVariantNames    ${pvariantsCount}
+    ...    ELSE    Set Variable    ${EMPTY}
+    ${pimgs}=    GetImages
+    writeToFile    ${pname}::${pprice}::${pcontent}::${pvariants}::${pimgs}
+    Close Browser
+    Switch Browser    ${br2}
 
 writeToFile
     [Arguments]    ${data}
