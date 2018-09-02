@@ -3,7 +3,7 @@ Library           Selenium2Library
 Library           OperatingSystem
 Library           String
 Library           doFil.py
-Variables         config.py
+Variables         config/config.py
 Variables         brands.py
 Resource          Common.txt
 
@@ -77,8 +77,8 @@ writeToFile
     [Arguments]    ${data}
     Wait Until Keyword Succeeds    3m    1s    GetLock
     Run Keyword IF    ${fileLock}==0    Set Global Variable    ${fileLock}    1
-    Run Keyword IF    ${fileLock}==1    Append To File    ${CURDIR}/op.txt    ${data}
-    Run Keyword IF    ${fileLock}==1    Append To File    ${CURDIR}/op.txt    ${\n}
+    Run Keyword IF    ${fileLock}==1    Append To File    ${CURDIR}/../op.txt    ${data}
+    Run Keyword IF    ${fileLock}==1    Append To File    ${CURDIR}/../op.txt    ${\n}
     Run Keyword IF    ${fileLock}==1    Set Global Variable    ${fileLock}    0
 
 GetImages

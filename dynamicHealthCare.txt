@@ -3,7 +3,7 @@ Library           Selenium2Library
 Library           OperatingSystem
 Library           String
 Library           doFil.py
-Variables         config.py
+Variables         config/config.py
 Resource          Common.txt
 
 *** Test Cases ***
@@ -25,14 +25,14 @@ AddCategories
 AddProducts
     [Tags]    K
     Sleep    1m
-    ${contents}=    Get File    ${CURDIR}/op.txt
+    ${contents}=    Get File    ${CURDIR}/../op.txt
     @{lines}=    Split to lines    ${contents}
     : FOR    ${line}    IN    @{lines}
     \    ${stat}    ${pstring}    Run Keyword If    '${line}'<>'DONE'    AddProduct    ${line}
     \    ...    ELSE    Continue For Loop
     \    Wait Until Keyword Succeeds    3m    1s    GetLock
     \    Run Keyword IF    ${fileLock}==0    Set Global Variable    ${fileLock}    2
-    \    Run Keyword IF    ${fileLock}==2    Replace_line_in_file    ${CURDIR}/op.txt    ${line}    DONE
+    \    Run Keyword IF    ${fileLock}==2    Replace_line_in_file    ${CURDIR}/../op.txt    ${line}    DONE
     \    Run Keyword IF    ${fileLock}==2    Set Global Variable    ${fileLock}    0
     \    ${tm}=    Get Time
     \    Append To File    ${CURDIR}/Log.txt    ${tm} - ${line}
