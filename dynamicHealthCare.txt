@@ -36,7 +36,6 @@ AddProducts
     \    Run Keyword IF    ${fileLock}==2    Set Global Variable    ${fileLock}    0
     \    ${tm}=    Get Time
     \    Append To File    ${CURDIR}/Log.txt    ${tm} - ${line}
-    ${EMPTY}
 
 *** Keywords ***
 AddVarient
