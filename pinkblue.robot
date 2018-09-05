@@ -66,7 +66,7 @@ GetPB_L3
     ${pcontent}    Run Keyword If    '${pcontStat}'=='FAIL'    Set Variable    ${EMPTY}
     ...    ELSE    Set Variable    ${pcontent}
     ${pvariantsCount}=    Get Matching Xpath Count    //td[@data-th='Variant Name']
-    ${pvariants}=    Run Keyword If    ${pvariantsCount}>0    GetVariantNames    ${pvariantsCount}
+    ${pvariants}=    Run Keyword If    ${pvariantsCount}>0    Run Keyword And Ignore Error    GetVariantNames    ${pvariantsCount}
     ...    ELSE    Set Variable    ${EMPTY}
     ${pimgs}=    GetImages
     writeToFile    ${pname}::${pprice}::${pcontent}::${pvariants}::${pimgs}
