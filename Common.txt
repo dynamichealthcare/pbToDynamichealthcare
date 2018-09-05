@@ -7,7 +7,7 @@ GetVariantNames
     [Arguments]    ${pvariantsCount}
     ${x}=    Set Variable    ${EMPTY}
     : FOR    ${INDEX}    IN RANGE    1    ${pvariantsCount}
-    \    ${temp}=    Get Text    //table[@id='super-product-table']/tbody[${INDEX}]/tr/td[contains(@class,'col attribute hasfilter')]
-    \    ${x}=    Run Keyword If    '${x}'=='${EMPTY}'    Set Variable    ${temp}
-    \    ...    ELSE    Catenate    ${x}    |    ${temp}
+    \    ${xstat}    ${temp}    Run Keyword And Ignore Error    Get Text    //table[@id='super-product-table']/tbody[${INDEX}]/tr/td[contains(@data-th,'shade_color')]
+    \    ${x}=    Run Keyword If    '${xstat}'=='PASS' and '${x}'=='${EMPTY}'    Set Variable    ${temp}
+    \    ${x}=    Run Keyword If    '${xstat}'=='PASS' and '${x}'<>'${EMPTY}'    Catenate    ${x}    |    ${temp}
     [Return]    ${x}
