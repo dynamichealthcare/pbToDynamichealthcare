@@ -12,17 +12,9 @@ ${browser}        chrome
 
 *** Test Cases ***
 GetPB
-    [Tags]    K
     Remove Files    ${CURDIR}/img/*.*
     Comment    Set Global Variable    ${globalCounter}
-    Set Global Variable    ${globalCounter}
-    Comment    ${br1}=    Open Browser    https://pinkblue.in/brand/    ${browser}
-    Comment    ${brandItems}=    Get Matching Xpath Count    //li//a[contains(@href,'pinkblue.in/brand') and starts-with(text(),'${brandCharacter}')]
-    Comment    ${brandItems}=    Evaluate    ${brandItems}+1
-    Comment    : FOR    ${INDEX}    IN RANGE    1    ${brandItems}
-    Comment    \    ${url}=    Get Element Attribute    //li[${INDEX}]//a[contains(@href,'pinkblue.in/brand') and starts-with(text(),'${brandCharacter}')]    href
-    Comment    \    GetPB_L1    ${url}    ${br1}    #For brand with matching alphabet
-    @{brands}=    Split String    ${brandsName}    ,
+    @{brands}=    Split String    ${PINKBLUEbrandsName2}    ,
     ${totBrands}=    Get Length    ${brands}
     : FOR    ${i}    IN RANGE    0    ${totBrands}
     \    GetPB_L1    ${${brands[${i}]}}    #${br1}
@@ -36,8 +28,9 @@ GetPB_L1
     ${cnt}=    Run Keyword If    '${cnt}'=='Items'    Set Variable    1
     ...    ELSE IF    '${cnt}'=='Item'    Set Variable    1
     ...    ELSE    Convert To Number    ${cnt}
-    ${cnt}=    Run Keyword If    ${cnt}>1    Evaluate    int(__import__('math').ceil( ${cnt}/36.0 )+1.0)
+    ${cnt}=    Run Keyword If    ${cnt}>1    Evaluate    int(__import__('math').ceil( ${cnt}/36.0 )+2.0)
     ...    ELSE    SET VARIABLE    3
+    Comment    ${cnt}=    Set variable    3
     : FOR    ${pg}    IN RANGE    2    ${cnt}
     \    ${medItems}=    Get Matching Xpath Count    //ol/li//div[@class='product details product-item-details']//a
     \    ${medItems}=    Evaluate    ${medItems}+1
@@ -50,7 +43,7 @@ GetPB_L1
 
 GetPB_L2
     [Arguments]    ${medItems}    ${br2}
-	Log    here
+    Comment    ${medItems}=    Set variable    11
     : FOR    ${INDEX}    IN RANGE    1    ${medItems}
     \    Run Keyword And Ignore Error    GetPB_L3    ${medItems}    ${br2}    ${INDEX}
 
@@ -58,7 +51,7 @@ GetPB_L3
     [Arguments]    ${medItems}    ${br2}    ${INDEX}
     ${url}=    Get Element Attribute    //ol/li[${INDEX}]//div[@class='product details product-item-details']//a    href
     ${br3}=    Open Browser    ${url}    ${browser}
-    Wait Until Page Does Not Contain Element    //*[@alt='Loading...']    15s
+    Wait Until Page Does Not Contain Element    //*[@alt='Loading...']    40s
     Sleep    3s
     ${pname}=    Get Text    //h1/span[@itemprop='name']
     ${pprice}=    Get Text    //span[@id='price-to-pay']
@@ -66,8 +59,11 @@ GetPB_L3
     ${pcontent}    Run Keyword If    '${pcontStat}'=='FAIL'    Set Variable    ${EMPTY}
     ...    ELSE    Set Variable    ${pcontent}
     ${pvariantsCount}=    Get Matching Xpath Count    //td[@data-th='Variant Name']
-    ${pvariants}=    Run Keyword If    ${pvariantsCount}>0    Run Keyword And Ignore Error    GetVariantNames    ${pvariantsCount}
-    ...    ELSE    Set Variable    ${EMPTY}
+    ${pvariants}=    Set Variable    ${EMPTY}
+    ${pvariants}=    Run Keyword If    ${pvariantsCount}>0    GetVariantNames    ${pvariantsCount}
+    Log    ${pvariants}
+    ${pvariants}=    Run Keyword If    '${pvariants}'=='None'    Set Variable    ${EMPTY}
+    ...    ELSE    Set Variable    ${pvariants}
     ${pimgs}=    GetImages
     writeToFile    ${pname}::${pprice}::${pcontent}::${pvariants}::${pimgs}
     Close Browser
@@ -77,8 +73,8 @@ writeToFile
     [Arguments]    ${data}
     Wait Until Keyword Succeeds    3m    1s    GetLock
     Run Keyword IF    ${fileLock}==0    Set Global Variable    ${fileLock}    1
-    Run Keyword IF    ${fileLock}==1    Append To File    ${CURDIR}/../op.txt    ${data}
-    Run Keyword IF    ${fileLock}==1    Append To File    ${CURDIR}/../op.txt    ${\n}
+    Run Keyword IF    ${fileLock}==1    Append To File    ${CURDIR}/../op2.txt    ${data}
+    Run Keyword IF    ${fileLock}==1    Append To File    ${CURDIR}/../op2.txt    ${\n}
     Run Keyword IF    ${fileLock}==1    Set Global Variable    ${fileLock}    0
 
 GetImages

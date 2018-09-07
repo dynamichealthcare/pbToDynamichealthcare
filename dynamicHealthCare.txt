@@ -12,7 +12,7 @@ AddCategories
     Input Text    //input[@name='username']    ${username}
     Input Text    //input[@name='password']    ${pwd}
     Click Element    //input[@name='submit']
-    @{categories}=    Split String    ${CategoryNames}    ,
+    @{categories}=    Split String    ${DYNAMICHEALTHCARECategoryNames}    ,
     ${elemsCount}    Get Length    ${categories}
     : FOR    ${i}    IN RANGE    1    ${elemsCount}
     \    Go To    http://dynamicdentalhealthcare.com/dentals/Admin/category
@@ -23,7 +23,6 @@ AddCategories
     \    Wait Until Element Is Visible    //div[@class='alert alert-success']
 
 AddProducts
-    [Tags]    K
     Sleep    1m
     ${contents}=    Get File    ${CURDIR}/../op.txt
     @{lines}=    Split to lines    ${contents}
