@@ -1,6 +1,7 @@
 import fileinput
 import requests
 import time
+import sys
 
 __all__ = ['fileDownload','getfilename','Replace_line_in_file']
 
@@ -14,8 +15,8 @@ def fileDownload(url,c):
 def getfilename(url):
     return time.strftime("%Y%m%d%H%M%S") + '.' + url.split('.')[-1]
 
-def Replace_line_in_file(file,searchExp1,replaceLine):
-    for line in fileinput.input(file, inplace=1):
-        if searchExp1 in line:
-            line = replaceLine+'\n'
+def Replace_line_in_file(f,searchExp):
+    for line in fileinput.input(f, inplace=1):
+        if line.decode('utf-8').startswith(searchExp):
+            line = "DONE::"+line
         sys.stdout.write(line)
