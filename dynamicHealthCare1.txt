@@ -23,6 +23,7 @@ AddCategories
     \    Wait Until Element Is Visible    //div[@class='alert alert-success']
 
 AddProducts
+    [Tags]    dy
     Sleep    1m
     ${contents}=    Get File    ${CURDIR}/../op1.txt
     @{lines}=    Split to lines    ${contents}

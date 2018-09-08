@@ -8,6 +8,7 @@ Resource          Common.txt
 
 *** Test Cases ***
 AddProducts
+    [Tags]    dy
     Sleep    1m
     ${contents}=    Get File    ${CURDIR}/../op3.txt
     @{lines}=    Split to lines    ${contents}
