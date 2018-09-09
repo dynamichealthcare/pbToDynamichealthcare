@@ -38,7 +38,7 @@ getVariantInfo
     ${elems}=    Evaluate    ${elems}-1
     ${xvNam}=    Get Text    //table[@id='super-product-table']/tbody[${INDEX}]/tr/td[@data-th='Variant Name']
     ${xvContent}=    Get Text    //table[@id='super-product-table']/tbody[${INDEX}]/tr/td[@data-th='Package Content']
-    ${xvPrice}=    Get Text    //table[@id='super-product-table']/tbody[${INDEX}]/tr/td[@data-th='Price']
+    ${xvPrice}=    Get Text    //table[@id='super-product-table']/tbody[${INDEX}]/tr//*[@data-price-type='finalPrice']
     ${varInfo}=    Set Variable    ${xvNam}!!${xvContent}!!${xvPrice}!!
     : FOR    ${cc}    IN RANGE    1    ${elems}
     \    ${at}=    Get Element Attribute    //table[@id='super-product-table']/tbody[${INDEX}]/tr/td[${cc}]    data-th
