@@ -25,20 +25,23 @@ GetVariantNames
     \    ...    ELSE IF    '${xstat}'=='FAIL' and '${xstat2}'=='PASS' and '${x}'<>'${EMPTY}'    Catenate    ${x}    |
     \    ...    ${temp2}
     \    ...    ELSE IF    '${xstat}'=='FAIL' and '${xstat2}'=='FAIL'    Set Variable    ${EMPTY}
-    \    ${varName}=    getVariantInfo
-    \    Run Keyword If    '${varName}'=='${EMPTY}'    Set Global Variable    ${x}    ${varName}
+    \    ${varName}=    getVariantInfo    ${INDEX}
+    \    Run Keyword If    '${x}'=='${EMPTY}'    Set Global Variable    ${x}    ${varName}
     \    ...    ELSE    Set Global Variable    ${x}    ${x}|${varName}
-    Log    ${x}
     [Return]    ${x}
 
 getVariantInfo
-    ${elems}=    Get Matching Xpath Count    //table[@id='super-product-table']/tbody[${INDEX}/td
+    [Arguments]    ${INDEX}
+    ${elems}=    Get Matching Xpath Count    //table[@id='super-product-table']/tbody[${INDEX}]/tr/td
     ${varInfo}=    Set variable    ${EMPTY}
+    ${elFlag}    Set variable    0
+    ${elems}=    Evaluate    ${elems}-1
     :FOR    ${cc}    IN RANGE    1    ${elems}
-    \    ${at}=    Get Element Attribute    data-th
+    \    ${at}=    Get Element Attribute    //table[@id='super-product-table']/tbody[${INDEX}]/tr/td[${cc}]    data-th
+    \    Run Keyword If    '${at}'=='Price'    Set Global Variable    ${elFlag}    0
+    \    ${tmp}=    Get Text    //table[@id='super-product-table']/tbody[${INDEX}]/tr/td[${cc}]
+    \    ${varInfo}=    Run Keyword If    '${elFlag}'=='1' and '${varInfo}'==''    Set Variable    ${tmp}
+    \    ...    ELSE IF    '${elFlag}'=='1' and '${varInfo}'<>''    Set Variable    ${varInfo} ${tmp}
+    \    ...    ELSE    Set Variable    ${varInfo}
     \    Run Keyword If    '${at}'=='Package Content'    Set Global Variable    ${elFlag}    1
-    \    Run Keyword If    '${at}'=='Package Content'    Set Global Variable    ${elFlag}    0
-    \    ${tmp}=    Get Text    //table[@id='super-product-table']/tbody[${INDEX}/td[${cc}]
-    \    Run Keyword If    '${elFlag}'=='1' and '${varInfo}'==''    Set Global Variable    ${varInfo}    ${tmp}
-    \    ...    ELSE    Set Global Variable    ${varInfo}    ${varInfo} ${tmp}
     [Return]    ${varInfo}
