@@ -18,7 +18,7 @@ GetPB
     @{brands}=    Split String    ${PINKBLUEbrandsName2}    ,
     ${totBrands}=    Get Length    ${brands}
     : FOR    ${i}    IN RANGE    0    ${totBrands}
-    \    GetPB_L1    ${${brands[${i}]}}    #${br1}
+    \    Run Keyword And Ignore Error    GetPB_L1    ${${brands[${i}]}}    #${br1}
 
 *** Keywords ***
 GetPB_L1
