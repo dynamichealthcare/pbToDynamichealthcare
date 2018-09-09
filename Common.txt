@@ -1,3 +1,6 @@
+*** Settings ***
+Library           Selenium2Library
+
 *** Keywords ***
 GetLock
     ${result}=    Evaluate    ${fileLock}==0
@@ -7,11 +10,12 @@ GetVariantNames
     [Arguments]    ${pvariantsCount}
     [Timeout]    1 minute
     ${x}=    Set Variable    ${EMPTY}
-    ${pvariantsCount}=    Evaluate     ${pvariantsCount}+1
+    ${pvariantsCount}=    Evaluate    ${pvariantsCount}+1
+    ${varName}=    Set variable    ${EMPTY}
     : FOR    ${INDEX}    IN RANGE    1    ${pvariantsCount}
-    \    ${xstat}    ${temp}    Run Keyword And Ignore Error    Get Text    //table[@id='super-product-table']/tbody[${INDEX}]/tr/td[contains(@data-th,'shade_color')]
-    \    ${xstat2}    ${temp2}    Run Keyword And Ignore Error    Get Text    //table[@id='super-product-table']/tbody[${INDEX}]/tr/td[contains(@data-th,'shade_type')]
-    \    ${x}=    Run Keyword If    '${xstat}'=='PASS' and '${xstat2}'=='PASS' and '${x}'=='${EMPTY}'    Set Variable    ${temp}${SPACE}${temp2}
+    \    Comment    ${xstat}    ${temp}    Run Keyword And Ignore Error    Get Text    //table[@id='super-product-table']/tbody[${INDEX}]/tr/td[contains(@data-th,'shade_color')]
+    \    Comment    ${xstat2}    ${temp2}    Run Keyword And Ignore Error    Get Text    //table[@id='super-product-table']/tbody[${INDEX}]/tr/td[contains(@data-th,'shade_type')]
+    \    Comment    ${x}=    Run Keyword If    '${xstat}'=='PASS' and '${xstat2}'=='PASS' and '${x}'=='${EMPTY}'    Set Variable    ${temp}${SPACE}${temp2}
     \    ...    ELSE IF    '${xstat}'=='PASS' and '${xstat2}'=='PASS' and '${x}'<>'${EMPTY}'    Catenate    ${x}    |
     \    ...    ${temp}${SPACE}${temp2}
     \    ...    ELSE IF    '${xstat}'=='PASS' and '${xstat2}'=='FAIL' and '${x}'=='${EMPTY}'    Set Variable    ${temp}
@@ -21,5 +25,20 @@ GetVariantNames
     \    ...    ELSE IF    '${xstat}'=='FAIL' and '${xstat2}'=='PASS' and '${x}'<>'${EMPTY}'    Catenate    ${x}    |
     \    ...    ${temp2}
     \    ...    ELSE IF    '${xstat}'=='FAIL' and '${xstat2}'=='FAIL'    Set Variable    ${EMPTY}
+    \    ${varName}=    getVariantInfo
+    \    Run Keyword If    '${varName}'=='${EMPTY}'    Set Global Variable    ${x}    ${varName}
+    \    ...    ELSE    Set Global Variable    ${x}    ${x}|${varName}
     Log    ${x}
     [Return]    ${x}
+
+getVariantInfo
+    ${elems}=    Get Matching Xpath Count    //table[@id='super-product-table']/tbody[${INDEX}/td
+    ${varInfo}=    Set variable    ${EMPTY}
+    :FOR    ${cc}    IN RANGE    1    ${elems}
+    \    ${at}=    Get Element Attribute    data-th
+    \    Run Keyword If    '${at}'=='Package Content'    Set Global Variable    ${elFlag}    1
+    \    Run Keyword If    '${at}'=='Package Content'    Set Global Variable    ${elFlag}    0
+    \    ${tmp}=    Get Text    //table[@id='super-product-table']/tbody[${INDEX}/td[${cc}]
+    \    Run Keyword If    '${elFlag}'=='1' and '${varInfo}'==''    Set Global Variable    ${varInfo}    ${tmp}
+    \    ...    ELSE    Set Global Variable    ${varInfo}    ${varInfo} ${tmp}
+    [Return]    ${varInfo}
