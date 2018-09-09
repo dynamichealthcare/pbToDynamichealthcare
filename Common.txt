@@ -36,7 +36,11 @@ getVariantInfo
     ${varInfo}=    Set variable    ${EMPTY}
     ${elFlag}    Set variable    0
     ${elems}=    Evaluate    ${elems}-1
-    :FOR    ${cc}    IN RANGE    1    ${elems}
+    ${xvNam}=    Get Text    //table[@id='super-product-table']/tbody[${INDEX}]/tr/td[@data-th='Variant Name']
+    ${xvContent}=    Get Text    //table[@id='super-product-table']/tbody[${INDEX}]/tr/td[@data-th='Package Content']
+    ${xvPrice}=    Get Text    //table[@id='super-product-table']/tbody[${INDEX}]/tr/td[@data-th='Price']
+    ${varInfo}=    Set Variable    ${xvNam}!!${xvContent}!!${xvPrice}!!
+    : FOR    ${cc}    IN RANGE    1    ${elems}
     \    ${at}=    Get Element Attribute    //table[@id='super-product-table']/tbody[${INDEX}]/tr/td[${cc}]    data-th
     \    Run Keyword If    '${at}'=='Price'    Set Global Variable    ${elFlag}    0
     \    ${tmp}=    Get Text    //table[@id='super-product-table']/tbody[${INDEX}]/tr/td[${cc}]
