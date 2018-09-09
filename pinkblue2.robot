@@ -57,7 +57,7 @@ GetPB_L3
     ${pname}=    Get Text    //h1/span[@itemprop='name']
     ${pprice}=    Get Text    //span[@id='price-to-pay']
     ${pbrand}=    Get Text    //a[@id='brand']
-    ${pbrand}=    Split String    ${pbrand}
+    ${pbrand}=    Strip String    ${pbrand}
     ${pcontStat}    ${pcontent}    Run Keyword And Ignore Error    Get Text    //div[@class='package-detail']
     ${pcontent}    Run Keyword If    '${pcontStat}'=='FAIL'    Set Variable    ${EMPTY}
     ...    ELSE    Set Variable    ${pcontent}
