@@ -8,7 +8,7 @@ GetLock
 
 GetVariantNames
     [Arguments]    ${pvariantsCount}
-    [Timeout]    1 minute
+    [Timeout]    2 minutes
     ${x}=    Set Variable    ${EMPTY}
     ${pvariantsCount}=    Evaluate    ${pvariantsCount}+1
     ${varName}=    Set variable    ${EMPTY}
