@@ -53,7 +53,9 @@ AddVarient
     Click Element    //input[@name='submit']
     : FOR    ${i}    IN RANGE    0    ${elemsCount}
     \    Go To    http://dynamicdentalhealthcare.com/dentals/Admin/add_variants
-    \    ${variantName}=    Strip String    ${variantsList[${i}]}
+    \    Log    ${variantsList}
+    \    ${variantName}=    Set Variable    ${variantsList[${i}]}
+    \    ${variantName}=    Strip String    ${variantName}
     \    Input Text    //input[@name='variants']    ${variantName}
     \    Click Element    //input[@name='submit']
     \    Wait Until Element Is Visible    //div[@class='alert alert-success']    10s
@@ -70,34 +72,13 @@ ScrollAndClickButton
 AddProduct
     [Arguments]    ${pstring}
     ${pstringArr}=    Split String    ${pstring}    ::
-    ${pname}=    Set Variable    ${pstringArr[0]}
-    ${pprice}=    Set Variable    ${pstringArr[1]}
-    ${pcontent}=    Set Variable    ${pstringArr[2]}
     ${pvariants}=    Set Variable    ${pstringArr[3]}
-    ${variantStringLen}=    Get Length    ${pvariants}
     @{pvariants}=    Split String    ${pvariants}    |
-    ${brandNamex}=    Set Variable    ${pstringArr[5]}
-    Run Keyword If    ${variantStringLen}>4    AddVarient    ${pvariants}
-    ${pimgs}=    Set Variable    ${pstringArr[4]}
-    @{pimgs}=    Split String    ${pimgs}    |
-    Go To    http://dynamicdentalhealthcare.com/dentals/Admin/add_product
-    Execute Javascript    document.getElementById('selected').innertext=' \ \ \ ${brandNamex}'
-    Run Keyword And Ignore Error    selectBrand    ${brandNamex}
-    Input Text    //input[@name='actual_product_data']    ${pname}
-    Input Text    //input[@name='p_price']    ${pprice}
-    Input Text    //textarea[@name='p_content']    ${pcontent}
-    Input Text    //input[@name='current_scheme']    Check Deals
-    ${imgCount}=    Get Length    ${pimgs}
-    : FOR    ${i}    IN RANGE    0    ${imgCount}
-    \    ${j}=    Evaluate    ${i}+2
-    \    ${fileUpload}=    Strip String    ${pimgs[${i}]}
-    \    Choose File    //form[@id='contact-form']/div/div[1]/div[${j}]/input[@type='file']    ${CURDIR}/img/${fileUpload}
-    ${variantCount}=    Get Length    ${pvariants}
-    : FOR    ${i}    IN RANGE    0    ${variantCount}
-    \    ${variantName}=    Strip String    ${pvariants[${i}]}
-    \    Run Keyword If    '${variantName}'=='${EMPTY}'    Exit For Loop
-    \    ...    ELSE    find&SelectVariant    ${variantName}
-    ScrollAndClickButton    //input[@id='checkss']
+    ${variantStringLen}=    Get Length    @{pvariants}
+    Run Keyword If    ${variantStringLen}>4    AddVarient    @{pvariants}
+    ...    ELSE    AddProductForVariant    ${pstring}    X
+    :FOR    ${i}    IN RANGE    0    ${variantStringLen}
+    \    AddProductForVariant    ${pstring}    ${pvariants[${i}]}
 
 find&SelectVariant
     [Arguments]    ${elementText}
@@ -119,3 +100,35 @@ selectBrand
     Sleep    1s
     Click Element    //button[@class='close']
     Sleep    1s
+
+AddProductForVariant
+    [Arguments]    ${pstring}    ${prodVar}
+    ${pstringArr}=    Split String    ${pstring}    ::
+    ${pname}=    Set Variable    ${pstringArr[0]}
+    ${pprice}=    Set Variable    ${pstringArr[1]}
+    ${pcontent}=    Set Variable    ${pstringArr[2]}
+    ${brandNamex}=    Set Variable    ${pstringArr[5]}
+    ${pimgs}=    Set Variable    ${pstringArr[4]}
+    @{pimgs}=    Split String    ${pimgs}    |
+    ${pvariants}=    Set Variable    ${pstringArr[3]}
+    @{pvariants}=    Split String    ${pvariants}    |
+    ${xtitle}=    Set Variable If    '${prodVar}'=='X'    ${EMPTY}
+    @{prodVar}=    Run Keyword If    '${prodVar}'<>'X'    Split String    ${prodVar}    !!
+    Go To    http://dynamicdentalhealthcare.com/dentals/Admin/add_product
+    Execute Javascript    document.getElementById('selected').innertext=' \ \ \ ${brandNamex}'
+    Run Keyword And Ignore Error    selectBrand    ${brandNamex}
+    Input Text    //input[@name='actual_product_data']    ${pname} - ${prodVar[3]}
+    Input Text    //input[@name='p_price']    ${pprice}
+    Input Text    //textarea[@name='p_content']    ${pcontent}
+    Input Text    //input[@name='current_scheme']    Check Deals
+    ${imgCount}=    Get Length    ${pimgs}
+    : FOR    ${i}    IN RANGE    0    ${imgCount}
+    \    ${j}=    Evaluate    ${i}+2
+    \    ${fileUpload}=    Strip String    ${pimgs[${i}]}
+    \    Comment    Choose File    //form[@id='contact-form']/div/div[1]/div[${j}]/input[@type='file']    ${CURDIR}/img/${fileUpload}
+    ${variantCount}=    Get Length    ${pvariants}
+    : FOR    ${i}    IN RANGE    0    ${variantCount}
+    \    ${variantName}=    Strip String    ${pvariants[${i}]}
+    \    Run Keyword If    '${variantName}'=='${EMPTY}'    Exit For Loop
+    \    ...    ELSE    find&SelectVariant    ${variantName}
+    ScrollAndClickButton    //input[@id='checkss']
