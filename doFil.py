@@ -15,7 +15,7 @@ def fileDownload(url,c):
     f.close()
 
 def getfilename(url):
-    return time.strftime("%Y%m%d%H%M%S") + random.randint(1001,9999) + '.' + url.split('.')[-1]
+    return time.strftime("%Y%m%d%H%M%S") + str(random.randint(1001,9999)) + '.' + url.split('.')[-1]
 
 def Replace_line_in_file(f,searchExp):
     for line in fileinput.input(f, inplace=1):
