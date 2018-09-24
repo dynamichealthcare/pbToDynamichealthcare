@@ -2,6 +2,8 @@ import fileinput
 import requests
 import time
 import sys
+import random
+
 
 __all__ = ['fileDownload','getfilename','Replace_line_in_file']
 
@@ -13,7 +15,7 @@ def fileDownload(url,c):
     f.close()
 
 def getfilename(url):
-    return time.strftime("%Y%m%d%H%M%S") + '.' + url.split('.')[-1]
+    return time.strftime("%Y%m%d%H%M%S") + random.randint(1001,9999) + '.' + url.split('.')[-1]
 
 def Replace_line_in_file(f,searchExp):
     for line in fileinput.input(f, inplace=1):
