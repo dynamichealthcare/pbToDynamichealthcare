@@ -13,7 +13,7 @@ ${browser}        chrome
 *** Test Cases ***
 GetPB
     [Tags]    pb
-    Remove Files    ${CURDIR}/img/*.*
+    #Remove Files    ${CURDIR}/img/*.*
     Comment    Set Global Variable    ${globalCounter}
     @{brands}=    Split String    ${PINKBLUEbrandsName3}    ,
     ${totBrands}=    Get Length    ${brands}
