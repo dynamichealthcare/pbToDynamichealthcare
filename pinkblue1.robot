@@ -13,7 +13,7 @@ ${browser}        chrome
 *** Test Cases ***
 GetPB
     [Tags]    pb
-    Remove Files    ${CURDIR}/img/*.*
+    #Remove Files    ${CURDIR}/img/*.*
     Comment    Set Global Variable    ${globalCounter}
     @{brands}=    Split String    ${PINKBLUEbrandsName1}    ,
     ${totBrands}=    Get Length    ${brands}
@@ -88,8 +88,14 @@ GetImages
     \    ${furl}=    Get Element Attribute    //div[contains(@class,'fotorama__stage__shaft')]/div[${i}]/img[@class='fotorama__img']    src
     \    ${filename}=    Getfilename    ${furl}
     \    doFil.File Download    ${furl}    ${filename}
+    \    Wait Until Keyword Succeeds    2m    2s    ExistanceOfFile    ${filename}
     \    ${x}=    Run Keyword If    '${x}'=='${EMPTY}'    Set Variable    ${filename}
     \    ...    ELSE    Catenate    ${x}    |    ${filename}
     \    Comment    ${globalCounter}=    Evaluate    ${globalCounter}+1
     \    Comment    Set Global Variable    ${globalCounter}
     [Return]    ${x}
+
+ExistanceOfFile
+    [Arguments]    ${filename}
+	${r}=    File Should Exist    ${CURDIR}/img/${filename}
+	[Return]    ${r}
