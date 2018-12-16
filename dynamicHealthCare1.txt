@@ -102,14 +102,14 @@ find&SelectVariant
 
 selectBrand
     [Arguments]    ${brandNamex}
-    Click Element    //button[@id='selected']
-    Sleep    1s
-    Input Text    //input[@id='proo']    ${brandNamex}
+    Comment    Click Element    //button[@id='selected']
+    Comment    Sleep    1s
+    Input Text    //form/div/div[1]//input    ${brandNamex}
     Sleep    2s
-    Click Element    //input[@dir='${brandNamex}']
+    Click Element    //ul[@class='select2-results__options']/li[contains(text(),${brandNamex})]
     Sleep    1s
-    Click Element    //button[@class='close']
-    Sleep    1s
+    Comment    Click Element    //button[@class='close']
+    Comment    Sleep    1s
 
 AddProductForVariant
     [Arguments]    ${pname}    ${pprice}    ${pcontent}    ${brandNamex}    ${pimgs}    @{pvariants}
